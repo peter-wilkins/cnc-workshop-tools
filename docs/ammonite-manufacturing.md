@@ -8,6 +8,8 @@ The generator currently does four useful things:
 - sweeps an oval profile along it
 - adds ribbing with sine-wave-like periodic scaling
 - adds low-frequency variation so each seed is slightly different
+- slices the model into horizontal slab meshes for Blender inspection
+- adds translucent glue-line planes so the assembled stack can be checked visually
 
 ## Foam Slab Workflow
 
@@ -24,6 +26,15 @@ Safer workflow:
 7. Remove tabs/ears manually with saw, knife, hot wire, rasp, or sanding block.
 
 If the glued stack does fit under the router, a final cleanup pass may be possible, but the generator does not assume that.
+
+The generated slab meshes are planning geometry, not CAM. They are useful for checking:
+
+- how many foam sheets are needed
+- whether the stack still reads visually as one ammonite after slicing
+- where registration strategy needs tabs, hidden holes, or an external jig
+- whether a small proof-of-process foam test is worth cutting
+
+See `docs/router-capacity.md` before treating any slab thickness as real machine capacity.
 
 ## Foam Waste
 

@@ -14,7 +14,7 @@ The bias here is conservative:
 - `scripts/generate_cnc_simulation_test.py` generates safe LinuxCNC-style air-cut G-code plus SVG previews.
 - `scripts/validate_cnc_simulation_test.py` validates the generated G-code with LinuxCNC's standalone `rs274` interpreter.
 - `scripts/open_*_cnc_simulation` opens the example files in LinuxCNC AXIS simulation.
-- `scripts/generate_ammonite_blender.py` generates parameterised ammonite meshes with Blender Python.
+- `scripts/generate_ammonite_blender.py` generates parameterised ammonite meshes, foam slab slices, and a glued-stack Blender preview.
 - `scripts/install_blender_official.sh` installs official Blender LTS into `~/.local/opt/blender`.
 - `scripts/install_cnc_sim_tools_ubuntu.sh` installs LinuxCNC user-space simulation tools on Ubuntu.
 
@@ -52,6 +52,8 @@ blender -b --python scripts/generate_ammonite_blender.py -- --preset bold-ribs -
 ```
 
 Outputs go under `local/` by default so large generated files do not get committed accidentally.
+
+The AXYZ router's real maximum usable depth is not known yet. The default `50 mm` slab thickness is a conservative simulation value, not a machine guarantee. See `docs/router-capacity.md`.
 
 ## Safety
 
