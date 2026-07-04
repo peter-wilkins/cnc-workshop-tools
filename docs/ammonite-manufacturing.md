@@ -6,10 +6,18 @@ The generator currently does four useful things:
 
 - builds a logarithmic spiral shell
 - sweeps an oval profile along it
-- adds ribbing with sine-wave-like periodic scaling
+- adds ribbing with separate controls for plan-view outline and raised face relief
 - adds low-frequency variation so each seed is slightly different
 - slices the model into horizontal slab meshes for Blender inspection
 - adds translucent glue-line planes so the assembled stack can be checked visually
+
+The current white-sculpture baseline is:
+
+```bash
+blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7 --size-mm 650 --slab-thickness-mm 50
+```
+
+It is a proof shape, not a final commission model. It is good enough for learning the foam-slab workflow and finish tests. It still needs hand judgement against the physical reference before a full-size cut.
 
 ## Foam Slab Workflow
 
@@ -47,3 +55,31 @@ Useful first-stage extraction idea:
 - bag clean foam chunks separately if they are going to be reused, for example as insulation fill where appropriate
 
 Fine dust still needs proper extraction and PPE.
+
+## First Coupons
+
+Before the large sculpture, make small coupons that answer one question each.
+
+Shape coupon:
+
+```bash
+blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7 --size-mm 120 --slab-thickness-mm 25
+```
+
+Use it to judge whether the rib softness, centre spiral, and inflated whorl feel right in the hand.
+
+Slice coupon:
+
+- use two or three shallow foam layers
+- include removable registration ears or an external alignment jig
+- glue the stack and hand-fair it
+- inspect whether the glue lines become invisible enough after filler/primer
+
+Finish coupons:
+
+- matte white: primer, filler, sanding, satin/matte top coat
+- polished fossil: brown/gold base, hand-painted mineral veining, clear coat
+- dark cut-section: charcoal base, ochre chamber lines, gloss clear
+- pearlescent shell: pale base plus mica or pearlescent top coat
+
+Keep the coupon notes boring: substrate, primer, filler, paint, clear coat, sanding grit, drying time, result, and what failed.

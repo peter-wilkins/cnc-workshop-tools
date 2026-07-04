@@ -4,6 +4,7 @@
 Examples:
   blender -b --python scripts/generate_ammonite_blender.py
   blender -b --python scripts/generate_ammonite_blender.py -- --preset bold-ribs --seed 12
+  blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7
   blender -b --python scripts/generate_ammonite_blender.py -- --collection --variants 8
   blender -b --python scripts/generate_ammonite_blender.py -- --size-mm 650 --slab-thickness-mm 50
   blender -b --python scripts/generate_ammonite_blender.py -- --size-mm 650 --slab-thickness-mm 50 --router-max-depth-mm 50
@@ -41,6 +42,8 @@ class AmmoniteParams:
     rib_count: int = 92
     rib_strength: float = 0.18
     rib_sharpness: float = 2.25
+    rib_plan_strength: float = 1.0
+    rib_height_strength: float = 0.0
     rib_twist: float = 0.28
     radius_noise: float = 0.022
     rib_noise: float = 0.045
@@ -83,6 +86,29 @@ PRESETS: dict[str, AmmoniteParams] = {
         rib_count=52,
         rib_strength=0.08,
         rib_sharpness=1.4,
+        size_mm=650.0,
+    ),
+    "sculpture-target": AmmoniteParams(
+        preset="sculpture-target",
+        seed=1,
+        turns=3.45,
+        growth=0.146,
+        start_radius=0.28,
+        tube_ratio=0.36,
+        taper=0.012,
+        ovalness=0.92,
+        flat_back=0.2,
+        rib_count=86,
+        rib_strength=0.18,
+        rib_sharpness=1.05,
+        rib_plan_strength=0.32,
+        rib_height_strength=0.28,
+        rib_twist=0.04,
+        radius_noise=0.006,
+        rib_noise=0.012,
+        wobble=0.004,
+        path_segments=430,
+        ring_segments=72,
         size_mm=650.0,
     ),
 }
@@ -188,8 +214,11 @@ def make_ammonite(params: AmmoniteParams) -> bpy.types.Object:
         for j in range(params.ring_segments):
             theta = (j / params.ring_segments) * math.tau
             rib_angle_bias = 1.0 + params.rib_twist * math.cos(theta - u * math.tau)
-            radial = math.cos(theta) * tube_radius * (1.0 + (chamber_pulse - 1.0) * rib_angle_bias)
+            rib_influence = chamber_pulse - 1.0
+            radial = math.cos(theta) * tube_radius * (1.0 + rib_influence * rib_angle_bias * params.rib_plan_strength)
             height = math.sin(theta) * tube_radius * params.ovalness
+            if height > 0:
+                height *= 1.0 + rib_influence * math.sin(theta) * params.rib_height_strength
             if height < 0:
                 height *= params.flat_back
             point = center + normal * radial + binormal * height
@@ -216,6 +245,10 @@ def make_ammonite(params: AmmoniteParams) -> bpy.types.Object:
     bpy.context.collection.objects.link(obj)
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.normals_make_consistent(inside=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.object.shade_smooth()
 
     # Scale the largest XY dimension to the requested real-world size in millimetres.
@@ -224,8 +257,7 @@ def make_ammonite(params: AmmoniteParams) -> bpy.types.Object:
     largest = max(max(xs) - min(xs), max(ys) - min(ys))
     obj.scale = (params.size_mm / largest,) * 3
 
-    material = bpy.data.materials.new(f"warm_limestone_{params.preset}_{params.seed}")
-    material.diffuse_color = (0.72, 0.58, 0.42, 1.0)
+    material = make_material(f"warm_white_limestone_{params.preset}_{params.seed}", (0.86, 0.84, 0.79, 1.0))
     obj.data.materials.append(material)
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
@@ -246,17 +278,35 @@ def add_scene_helpers(obj: bpy.types.Object) -> None:
 
     bpy.context.scene.render.resolution_x = 1600
     bpy.context.scene.render.resolution_y = 1200
-    bpy.context.scene.world.color = (0.04, 0.045, 0.05)
+    bpy.context.scene.render.engine = "BLENDER_WORKBENCH"
+    bpy.context.scene.display.shading.light = "STUDIO"
+    bpy.context.scene.display.shading.color_type = "MATERIAL"
+    bpy.context.scene.display.shading.background_type = "VIEWPORT"
+    bpy.context.scene.display.shading.background_color = (0.78, 0.78, 0.78)
+    bpy.context.scene.display.shading.show_cavity = True
+    bpy.context.scene.display.shading.cavity_ridge_factor = 1.25
+    bpy.context.scene.display.shading.cavity_valley_factor = 0.85
+    bpy.context.scene.world.color = (0.78, 0.78, 0.78)
+    bpy.context.scene.view_settings.view_transform = "Standard"
+    bpy.context.scene.view_settings.look = "Medium High Contrast"
 
-    bpy.ops.object.light_add(type="AREA", location=(center.x - span * 0.25, center.y - span * 0.55, center.z + span * 1.2))
+    bpy.ops.object.light_add(type="AREA", location=(center.x - span * 0.25, center.y - span * 0.25, center.z + span * 1.4))
     light = bpy.context.object
     light.name = "softbox"
-    light.data.energy = 1200
+    light.data.energy = 1600
     light.data.size = span
 
-    bpy.ops.object.camera_add(location=(center.x, center.y - span * 0.45, center.z + span * 1.25), rotation=(math.radians(58), 0, 0))
+    bpy.ops.object.light_add(type="AREA", location=(center.x + span * 0.4, center.y + span * 0.35, center.z + span * 0.9))
+    fill = bpy.context.object
+    fill.name = "low_fill_light"
+    fill.data.energy = 240
+    fill.data.size = span * 1.4
+
+    bpy.ops.object.camera_add(location=(center.x, center.y - span * 0.8, center.z + span * 1.15))
     bpy.context.scene.camera = bpy.context.object
-    bpy.context.scene.camera.data.lens = 42
+    bpy.context.scene.camera.data.type = "PERSP"
+    bpy.context.scene.camera.data.lens = 54
+    bpy.context.scene.camera.data.clip_end = span * 4.0
 
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=center)
     target = bpy.context.object
@@ -432,7 +482,7 @@ def add_manufacturing_guides(
         color_shift = (index % 4) * 0.045
         slice_material = make_material(
             f"machined_slice_material_{index + 1:02d}",
-            (0.72 + color_shift, 0.58 + color_shift * 0.5, 0.42, 1.0),
+            (0.82 + color_shift, 0.80 + color_shift * 0.45, 0.74 + color_shift * 0.25, 1.0),
         )
         slice_obj = create_slice_object(
             obj,

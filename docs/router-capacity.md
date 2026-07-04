@@ -46,13 +46,13 @@ For foam, the cutter may physically reach deeper than it can cut cleanly or safe
 Until measured, generate slices with:
 
 ```bash
-blender -b --python scripts/generate_ammonite_blender.py -- --preset bold-ribs --seed 12 --size-mm 650 --slab-thickness-mm 50
+blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7 --size-mm 650 --slab-thickness-mm 50
 ```
 
 After measuring the real machine:
 
 ```bash
-blender -b --python scripts/generate_ammonite_blender.py -- --preset bold-ribs --seed 12 --size-mm 650 --slab-thickness-mm 50 --router-max-depth-mm 50
+blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7 --size-mm 650 --slab-thickness-mm 50 --router-max-depth-mm 50
 ```
 
 If `--slab-thickness-mm` exceeds `--router-max-depth-mm`, the script fails rather than hiding a dangerous assumption.

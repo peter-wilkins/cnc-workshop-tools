@@ -48,7 +48,7 @@ scripts/open_star_cnc_simulation
 Generate an ammonite mesh:
 
 ```bash
-blender -b --python scripts/generate_ammonite_blender.py -- --preset bold-ribs --seed 12 --size-mm 650 --slab-thickness-mm 50
+blender -b --python scripts/generate_ammonite_blender.py -- --preset sculpture-target --seed 7 --size-mm 650 --slab-thickness-mm 50
 ```
 
 Outputs go under `local/` by default so large generated files do not get committed accidentally.
