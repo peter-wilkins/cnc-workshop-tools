@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec "$root/scripts/open_cnc_axis_simulation" \
+  first-aircut-axis-mm \
+  First-Aircut-Sim \
+  examples/cnc-simulation-test/first-aircut-mm-safe-z5.ngc

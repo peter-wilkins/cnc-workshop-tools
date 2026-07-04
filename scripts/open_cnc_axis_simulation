@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 3 ]]; then
+  echo "Usage: scripts/open_cnc_axis_simulation <sim-name> <machine-name> <gcode-path>" >&2
+  exit 2
+fi
+
+sim_name="$1"
+machine_name="$2"
+gcode_arg="$3"
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+sim_dir="$root/.local/cnc-sim/$sim_name"
+source_dir="/usr/share/doc/linuxcnc/examples/sample-configs/sim/axis"
+ini="$sim_dir/$sim_name.ini"
+
+if [[ "$gcode_arg" = /* ]]; then
+  gcode="$gcode_arg"
+else
+  gcode="$root/$gcode_arg"
+fi
+
+if ! command -v linuxcnc >/dev/null 2>&1; then
+  echo "LinuxCNC is not installed. On Ubuntu, try: scripts/install_cnc_sim_tools_ubuntu.sh" >&2
+  exit 1
+fi
+
+if [[ ! -f "$gcode" ]]; then
+  echo "Missing generated test file: $gcode" >&2
+  echo "Run: python3 scripts/generate_cnc_simulation_test.py" >&2
+  exit 1
+fi
+
+mkdir -p "$sim_dir"
+
+if [[ ! -f "$source_dir/axis_mm.ini" ]]; then
+  echo "LinuxCNC sample simulation config not found: $source_dir/axis_mm.ini" >&2
+  echo "Install linuxcnc-uspace and its example configs." >&2
+  exit 1
+fi
+
+cp "$source_dir/axis_mm.ini" "$ini"
+cp "$source_dir/sim_mm.tbl" "$sim_dir/sim_mm.tbl"
+cp "$source_dir/cooling.hal" "$sim_dir/cooling.hal"
+
+python3 - "$ini" "$gcode" "$(dirname "$gcode")" "$machine_name" <<'PY'
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+ini = Path(sys.argv[1])
+gcode = Path(sys.argv[2])
+program_prefix = Path(sys.argv[3])
+machine_name = sys.argv[4]
+
+text = ini.read_text(encoding="utf-8")
+text = text.replace("MACHINE = LinuxCNC-HAL-SIM-AXIS", f"MACHINE = {machine_name}")
+text = text.replace("INTRO_TIME = 5", "INTRO_TIME = 1")
+text = text.replace("PROGRAM_PREFIX = ../../nc_files/", f"PROGRAM_PREFIX = {program_prefix}")
+
+lines = text.splitlines()
+out: list[str] = []
+inserted = False
+for line in lines:
+    out.append(line)
+    if line.startswith("PROGRAM_PREFIX = "):
+        out.append(f"OPEN_FILE = {gcode}")
+        inserted = True
+if not inserted:
+    raise SystemExit("Could not find PROGRAM_PREFIX in LinuxCNC sim config")
+
+ini.write_text("\n".join(out) + "\n", encoding="utf-8")
+PY
+
+touch "$sim_dir/sim_mm.var"
+
+echo "Opening LinuxCNC simulation:"
+echo "  $ini"
+echo
+echo "Preloaded air-cut file:"
+echo "  $gcode"
+echo
+exec linuxcnc "$ini"

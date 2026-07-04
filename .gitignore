@@ -1,0 +1,16 @@
+.local/
+local/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Generated CAD/CAM experiment outputs can get large quickly.
+*.blend
+*.stl
+*.obj
+*.mtl
+
+# Keep curated examples explicit under examples/.
+!examples/**/*.stl
+!examples/**/*.obj
+!examples/**/*.mtl

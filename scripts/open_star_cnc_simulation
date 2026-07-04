@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec "$root/scripts/open_cnc_axis_simulation" \
+  faceted-star-axis-mm \
+  Faceted-Star-Sim \
+  examples/cnc-simulation-test/faceted-star-air-sculpture-mm.ngc

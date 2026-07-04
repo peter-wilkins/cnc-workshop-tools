@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 164 164" role="img" aria-labelledby="title desc">
+  <title id="title">Faceted 3D star CNC simulation preview</title>
+  <desc id="desc">A five-point star with coloured paths showing different Z heights.</desc>
+  <rect x="0" y="0" width="164" height="164" fill="#f4f7f6" />
+  <rect x="12" y="12" width="140" height="140" fill="#fff" stroke="#d7e0df" stroke-width="1" />
+  <g fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="82.000,137.000 96.107,101.416 134.308,98.996 104.825,74.584 114.328,37.504 82.000,58.000 49.672,37.504 59.175,74.584 29.692,98.996 67.893,101.416 82.000,137.000" stroke="#b45309" /><polyline points="82.000,119.400 91.593,95.203 117.570,93.557 97.521,76.957 103.983,51.743 82.000,65.680 60.017,51.743 66.479,76.957 46.430,93.557 72.407,95.203 82.000,119.400" stroke="#0f766e" /><polyline points="82.000,99.600 86.514,88.213 98.739,87.439 89.304,79.627 92.345,67.761 82.000,74.320 71.655,67.761 74.696,79.627 65.261,87.439 77.486,88.213 82.000,99.600" stroke="#be123c" /><polyline points="82.000,82.000 82.000,137.000 96.107,101.416 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 96.107,101.416 134.308,98.996 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 134.308,98.996 104.825,74.584 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 104.825,74.584 114.328,37.504 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 114.328,37.504 82.000,58.000 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 82.000,58.000 49.672,37.504 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 49.672,37.504 59.175,74.584 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 59.175,74.584 29.692,98.996 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 29.692,98.996 67.893,101.416 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 67.893,101.416 82.000,137.000 82.000,82.000" stroke="#0f766e" /><polyline points="82.000,82.000 82.000,137.000" stroke="#0f766e" /><polyline points="82.000,82.000 134.308,98.996" stroke="#0f766e" /><polyline points="82.000,82.000 114.328,37.504" stroke="#0f766e" /><polyline points="82.000,82.000 49.672,37.504" stroke="#0f766e" /><polyline points="82.000,82.000 29.692,98.996" stroke="#0f766e" />
+  </g>
+  <g font-family="system-ui, sans-serif" font-size="5" fill="#475569">
+    <text x="12" y="160">Top view. Amber = lower Z, teal = mid Z, red = high Z.</text>
+  </g>
+</svg>

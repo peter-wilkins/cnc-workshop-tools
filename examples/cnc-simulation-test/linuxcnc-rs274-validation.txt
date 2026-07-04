@@ -1,0 +1,35 @@
+LinuxCNC rs274 validation for CNC simulation test files
+Status: PASS
+
+This is a parser/interpreter check, not a full GUI backplot or machine dry run.
+
+File: first-aircut-mm-safe-z5.ngc
+- straight moves: 107
+- X range: 0.000..120.000
+- Y range: 0.000..80.000
+- Z range: 5.000..15.000
+- checks:
+  - PASS: uses millimetres (G21 interpreted)
+  - PASS: program ends (M2 interpreted)
+  - PASS: no spindle start (no START_SPINDLE in canonical output)
+  - PASS: x envelope (0.000..120.000)
+  - PASS: y envelope (0.000..80.000)
+  - PASS: feed z floor (min feed Z 5.000)
+  - PASS: safe retract present (max Z 15.000)
+
+File: faceted-star-air-sculpture-mm.ngc
+- straight moves: 121
+- X range: 0.000..122.308
+- Y range: 0.000..114.496
+- Z range: 4.000..26.000
+- checks:
+  - PASS: uses millimetres (G21 interpreted)
+  - PASS: program ends (M2 interpreted)
+  - PASS: no spindle start (no START_SPINDLE in canonical output)
+  - PASS: x envelope (0.000..122.308)
+  - PASS: y envelope (0.000..114.496)
+  - PASS: feed z floor (min feed Z 4.000)
+  - PASS: safe retract present (max Z 26.000)
+
+Next manual check:
+- Open each file in a LinuxCNC GUI simulator/backplot and confirm the visual path matches the SVG preview.
