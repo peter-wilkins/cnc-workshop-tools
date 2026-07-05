@@ -17,6 +17,7 @@ The bias here is conservative:
 - `scripts/generate_ammonite_blender.py` generates parameterised ammonite meshes, foam slab slices, and a glued-stack Blender preview.
 - `scripts/install_blender_official.sh` installs official Blender LTS into `~/.local/opt/blender`.
 - `scripts/install_cnc_sim_tools_ubuntu.sh` installs LinuxCNC user-space simulation tools on Ubuntu.
+- `docs/ai-cad-stack.md` tracks the emerging AI CAD / physical-engineering agent stack and the skills we should build.
 
 ## Quick Start
 
