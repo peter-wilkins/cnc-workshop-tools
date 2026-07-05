@@ -1,0 +1,6 @@
+interface:
+  display_name: "CAD Geometry Validation"
+  short_description: "Check generated CAD geometry against specs"
+  default_prompt: "Use $cad-geometry-validation to inspect this generated CAD artifact against the design spec."
+policy:
+  allow_implicit_invocation: true

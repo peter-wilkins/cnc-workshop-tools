@@ -28,6 +28,14 @@ Practical shape:
 Do not make this a rigid wall. Use handoffs when a CAD artifact becomes a web
 tool, repo feature, or public site page.
 
+Repo implementation:
+
+- `.codex/agents/cad-agent.toml` defines the project-scoped custom CAD agent.
+- `docs/cad-agent-intro-prompt.md` gives the pasteable starter prompt.
+- `.agents/skills/cad-geometry-validation/` validates generated CAD geometry.
+- `.agents/skills/cad-manufacturability-review/` checks whether the design can
+  actually be made safely and cleanly.
+
 ## Codex Skill Invocation Controls
 
 Matt Pocock's newer skills distinguish user-invoked and model-invoked skills

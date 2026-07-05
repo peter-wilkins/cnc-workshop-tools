@@ -1,0 +1,6 @@
+interface:
+  display_name: "CAD Manufacturability Review"
+  short_description: "Review CAD for CNC and workshop reality"
+  default_prompt: "Use $cad-manufacturability-review to review this CAD design before physical fabrication."
+policy:
+  allow_implicit_invocation: true
